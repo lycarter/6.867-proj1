@@ -30,17 +30,15 @@ Next, we benchmark the gradient descent variations on these two functions (seedi
 \caption{Iterations (step = .1, threshold = .001)}
 \begin{tabular}{r|ccc|ccc|ccc}
    & \multicolumn{3}{|c}{Analytic Gradient} & \multicolumn{3}{|c}{Finite Differences} & \multicolumn{3}{|c}{\texttt{fminfunc}} \\
-$n$& $Q_n$         & $N_n$        & $S_n$ & $Q_n$              & $N_n$ & $S_n$             & $Q_n$         & $N_n$        & $S_n$ \\\hline
-2  & 16            & 33           &       & 16                 & 33      &                 &               &              &       \\
-5  & 18            & 60           &       & 18                 & 60      &                 &               &              &       \\
-20 & 21            &  1           &       & 21                 &  1      &                 &               &              &       \\
-100& 25            &  1           &       & 25                 &  1      &                 &               &              &       
+$n$& $Q_n$         & $N_n$        & $S_n$   & $Q_n$              & $N_n$   & $S_n$           & $Q_n$         & $N_n$        & $S_n$ \\\hline
+2  & 16            & 33           & 46      & 16                 & 33      & 46              &               &              &       \\
+5  & 18            & 60           & 50      & 18                 & 60      & 50              &               &              &       \\
+20 & 21            &  1           & 57      & 21                 &  1      & 57              &               &              &       \\
+100& 25            &  1           & 64      & 25                 &  1      & 64              &               &              &       
 \end{tabular}
 \end{table}
 
-One thing we notice is that the finite differences and analytic methods yield the exact same number of iterations for $Q_n$. This is easily explainable by noticing $\nabla Q_n = 2\mathbf{x}$. Since the gradient is linear, the finite differences method is still an exact solution to the gradient.
-
-We also notice that the finite differences and analytic methods yield the exact same number of iterations for $N_n$. This is explained by the fact that the finite difference approximation (with $\delta = .05$) differs from the gradient by just .03\% between $(0,1)$. This small difference is purely due to the gradient being very well behaved, with small values for the diagonal of the Hessian matrix for the inverted Gaussian.
+We notice that the finite differences and analytic methods yield the exact same number of iterations for all functions. This can be explained by examining the diagonal of the Hessian matrix for each of the functions - in all cases, the values are small, indicating low curvature, and thus that the function can be well-approximated by the linear finite difference approximation.
 
 \end{document}
 
