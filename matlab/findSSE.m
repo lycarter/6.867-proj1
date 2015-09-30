@@ -1,4 +1,4 @@
-function [ SSE, derivative ] = findSSE( X, Y, basis, theta )
+function [ SSE, derivative ] = findSSE( Y, basis, theta )
 %finds SSE and derivative
 %   Detailed explanation goes here
 
