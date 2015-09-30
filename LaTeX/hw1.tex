@@ -29,7 +29,7 @@ Next, we benchmark the gradient descent variations on these two functions (seedi
 \centering
 \caption{Iterations (step = .1, threshold = .001)}
 \begin{tabular}{r|ccc|ccc|ccc}
-   & \multicolumn{3}{|c}{Analytic Gradient} & \multicolumn{3}{|c}{Finite Differences} & \multicolumn{3}{|c}{\texttt{fminfunc}} \\
+   & \multicolumn{3}{|c}{Analytic Gradient} & \multicolumn{3}{|c}{Finite Differences} & \multicolumn{3}{|c}{\texttt{fminunc}} \\
 $n$& $Q_n$         & $N_n$        & $S_n$   & $Q_n$              & $N_n$   & $S_n$           & $Q_n$         & $N_n$        & $S_n$ \\\hline
 2  & 16            & 33           & 46      & 16                 & 33      & 46              &               &              &       \\
 5  & 18            & 60           & 50      & 18                 & 60      & 50              &               &              &       \\
@@ -38,7 +38,31 @@ $n$& $Q_n$         & $N_n$        & $S_n$   & $Q_n$              & $N_n$   & $S_
 \end{tabular}
 \end{table}
 
-We notice that the finite differences and analytic methods yield the exact same number of iterations for all functions. This can be explained by examining the diagonal of the Hessian matrix for each of the functions - in all cases, the values are small, indicating low curvature, and thus that the function can be well-approximated by the linear finite difference approximation.
+% probably should also mention the effect of:
+% starting point
+% step size
+% convergence criterion (threshold)
+
+We notice that the finite differences and analytic methods yield the exact same number of iterations for all functions. This can be explained by examining the diagonal of the Hessian matrix for each of the functions - in all cases, the values are small, indicating low curvature, and thus that the function can be well-approximated by the linear finite difference approximation. \\
+By plotting the difference between the finite differences approximation, we can see the accuracy achieved. Here, we again use $\delta = .01$. Figures \ref{fig:gradDifQ} through \ref{fig:gradDifS} are plots of $(\nabla f(\mathbf{x}) - \tilde{\nabla} f(\mathbf{x}))/f(\mathbf{x})$ for $x=(0,1)$.
+
+\begin{figure}[!htb]
+\minipage{0.32\textwidth}
+  \includegraphics[width=\linewidth]{figures/gradDifQ.png}
+  \caption{$Q_1$, scale of $10^{-12}$}\label{fig:gradDifQ}
+\endminipage\hfill
+\minipage{0.32\textwidth}
+  \includegraphics[width=\linewidth]{figures/gradDifN.png}
+  \caption{$N_1$, scale of $10^{-5}$}\label{fig:gradDifN}
+\endminipage\hfill
+\minipage{0.32\textwidth}%
+  \includegraphics[width=\linewidth]{figures/gradDifS.png}
+  \caption{$S_1$, scale of $10^{-6}$}\label{fig:gradDifS}
+\endminipage
+\end{figure}
+
+Given the scales of the plots, it is clear that the finite differences method is quite accurate for these functions over these distance scales. As noted, this is generally true when the diagonal entries of the Hessian matrix are small.
+
 
 \end{document}
 
