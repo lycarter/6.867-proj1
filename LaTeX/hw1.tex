@@ -11,10 +11,9 @@
 \begin{document}
 \newgeometry{top=.25in,left=1in,right=1in,bottom=1in}
 \maketitle
-\vspace{-4em}
-%Graphic = $$\includegraphics[width=WIDTH]{DiffEq_Diagram_#######}$$
+\vspace{-3em}
 \section{}
-First, we discuss variations on gradient descent, including analytic gradient descent, finite difference gradient descent, and \texttt{Matlab}'s \texttt{fminunc}, which includes some variations such as adaptive step size, using a quadratic approximation instead of linear approximation, and using a 2-dimensional subspace to reduce computational complexity. First, we'll examine the analytic gradient descent, which relies on having an analytic gradient expression at all points in space.
+First, we discuss variations on gradient descent, including analytic gradient descent, finite difference gradient descent, and Matlab's \texttt{fminunc}, which includes some variations such as adaptive step size, using a quadratic approximation instead of linear approximation, and using a 2-dimensional subspace to reduce computational complexity. First, we'll examine the analytic gradient descent, which relies on having an analytic gradient expression at all points in space.
 
 We'll refer to three example functions: the $n$-dimensional quadratic ``bowl'', $Q_n$, the $n$-dimensional inverted Gaussian (centered at $\mu = 0$, with $\Sigma = \mathbf I_n$), $N_n$, and the $n$-dimensional sum of $\sin$'s, $S_n$. These are defined as follows (leaving off the normalization constant on the inverted Gaussian for simplicity):
 
@@ -31,19 +30,29 @@ Next, we benchmark the gradient descent variations on these two functions (seedi
 \begin{tabular}{r|ccc|ccc|ccc}
    & \multicolumn{3}{|c}{Analytic Gradient} & \multicolumn{3}{|c}{Finite Differences} & \multicolumn{3}{|c}{\texttt{fminunc}} \\
 $n$& $Q_n$         & $N_n$        & $S_n$   & $Q_n$              & $N_n$   & $S_n$           & $Q_n$         & $N_n$        & $S_n$ \\\hline
-2  & 16            & 33           & 46      & 16                 & 33      & 46              &               &              &       \\
-5  & 18            & 60           & 50      & 18                 & 60      & 50              &               &              &       \\
-20 & 21            &  1           & 57      & 21                 &  1      & 57              &               &              &       \\
-100& 25            &  1           & 64      & 25                 &  1      & 64              &               &              &       
+2  & 16            & 33           & 46      & 16                 & 33      & 46              & 6             & 15           & 18    \\
+5  & 18            & 60           & 50      & 18                 & 60      & 50              & 12            & 48           & 36    \\
+20 & 21            &  1           & 57      & 21                 &  1      & 57              & 42            & 21           & 126   \\
+100& 25            &  1           & 64      & 25                 &  1      & 64              & 202           & 101          & 606   
 \end{tabular}
 \end{table}
 
-% probably should also mention the effect of:
-% starting point
-% step size
-% convergence criterion (threshold)
+Focusing on just $S_n$, and leaving the step size, starting point, and threshold the same unless otherwise noted, we may also examine the effects of each variable (defaulting to $n=5$:
 
-We notice that the finite differences and analytic methods yield the exact same number of iterations for all functions. This can be explained by examining the diagonal of the Hessian matrix for each of the functions - in all cases, the values are small, indicating low curvature, and thus that the function can be well-approximated by the linear finite difference approximation. \\
+\begin{table}[h]
+\centering
+\caption{Examining the effect of other variables}
+\begin{tabular}{cc|cc|cc}
+\multicolumn{2}{c}{Step Size}& \multicolumn{2}{|c}{Starting Point} & \multicolumn{2}{|c}{Threshold} \\
+$\Delta$  & Iterations        & $x_0$   & Iterations   & $\delta$  & Iterations     \\\hline
+2.0       & 177               & 0.001   & 49           & 0.01      & 39     \\
+1.0       & 5                 & 0.01    & 49           & 0.001     & 50     \\
+0.1       & 61                & 0.1     & 50           & 0.0001    & 61     \\
+0.01      & 503               & 1.0     & 61           & 0.00001   & 72  
+\end{tabular}
+\end{table}
+
+We notice that the finite differences and analytic methods yield the exact same number of iterations for all functions. This can be explained by examining the diagonal of the Hessian matrix for each of the functions - in all cases, the values are small, indicating low curvature, and thus that the function can be well-approximated by the linear finite difference approximation. Therefore, when examining the effects of other variables, we only present the numbers using the finite-difference gradient (the analytic gradient produces identical numbers). We may draw a few conclusions by examining the effects of other variables. As we decrease the step size, it takes longer to converge. However, increasing the step size beyond 1 causes the iteration to overshoot, resulting in an overall higher number of required iterations. Moving the starting point further from the minimum increases the number of iterations, but only slightly, because the gradient increases, which increases the step size proportionally. Finally, requiring a stricter convergence criteria via a smaller threshold increases the number of iterations, but only by a constant amount, because the gradient again ensures the step size is in proportion to the distance from the minimum.\\
 By plotting the difference between the finite differences approximation, we can see the accuracy achieved. Here, we again use $\delta = .01$. Figures \ref{fig:gradDifQ} through \ref{fig:gradDifS} are plots of $(\nabla f(\mathbf{x}) - \tilde{\nabla} f(\mathbf{x}))/f(\mathbf{x})$ for $x=(0,1)$.
 
 \begin{figure}[!htb]
@@ -62,6 +71,8 @@ By plotting the difference between the finite differences approximation, we can 
 \end{figure}
 
 Given the scales of the plots, it is clear that the finite differences method is quite accurate for these functions over these distance scales. As noted, this is generally true when the diagonal entries of the Hessian matrix are small.
+
+
 
 
 \end{document}
