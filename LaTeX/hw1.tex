@@ -74,6 +74,19 @@ By plotting the difference between the finite differences approximation, we can 
 Given the scales of the plots, it is clear that the finite differences method is quite accurate for these functions over these distance scales. As noted, this is generally true when the diagonal entries of the Hessian matrix are small.
 
 \section{}
+Another way we can benchmark our gradient descent method is to perform basis function regression on some given sample data points. Given, say, $10$ data points $X = x^{(1:10)}$ that are generated from a noisy distribution from $y = \sin(2\pi x)$, we'll try to estimate the generating function based on (a) the values at the data points $Y = y^{(1:10)}$ and (b) a basis set of functions.\\
+We can begin by considering a simple polynomial basis; i.e. $\phi(x) = [1, x, x^2, \ldots , x^M]$ where $M$ is the degree of the polynomial we are considering. We wish to minimize our parameter $\theta$, which has a well-known analytic solution:
+$$\theta = (\Phi^T\Phi)^{-1}\Phi^Ty$$
+given that
+$$\Phi = some matrix here$$
+while limited to our polynomial basis. We can easily test this by plotting our data $(X, Y)$ with our learned model $\theta^T\Phi(X)$ for varying values of $M$:
+
+We note that we can't have $M > 10$, or else we have too many parameters to adjust for the data points that we have. We can adjust for this using the \textit{Moore-Penrose inverse}, but we will not address it in detail here.\\
+However, we can generalize our basis functions to more than simply polynomials in $x$. In this way, we can introduce trigonometric bases, exponential bases, etc. to give us more flexibility in choosing the parameter $\theta$. Our ultimate goal is the minimize the sum of the squared errors, or $SSE(\theta)$, equal to
+$$\text{SSE}(\theta) = \sum_{i=1}^n (\theta^T\phi(x^{(i)}) - y^{(i)})^2$$.
+We can minimize this by using gradient descent, which we discussed earlier. We can then confirm our calculations analytically by computing the derivative of $\text{SSE}(\theta)$:
+$$\frac{\partial}{\partial\theta}\Big(\sum_{i=1}^n (\theta^T\phi(x^{(i)}) - y^{(i)})^2\Big) = 2\sum_{i=1}^n \phi(x^{(i)})(\theta^T\phi(x^{(i)}) - y^{(i)})$$
+Plugging in our optimal $\theta$ into this formula, we obtain the following results for our derivative:
 
 
 
