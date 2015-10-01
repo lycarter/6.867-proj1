@@ -118,19 +118,20 @@ From figure \ref{fig:basism9}, it's also clear that when $M$ is too high, we beg
 At the moment, however, we can generalize our basis functions to more than simply polynomials in $x$. In this way, we can introduce trigonometric bases, exponential bases, etc. to give us more flexibility in choosing the parameter $\theta$. 
 We can minimize this by using gradient descent, which we discussed earlier. We can then confirm our calculations analytically by computing the derivative of $\text{SSE}(\theta)$:
 \[ \frac{\partial}{\partial\theta}\Big(\sum_{i=1}^n (\theta^\intercal\phi(x^{(i)}) - y^{(i)})^2\Big) = 2\sum_{i=1}^n \phi(x^{(i)})(\theta^\intercal\phi(x^{(i)}) - y^{(i)}) \]
-Plugging in our optimal $\theta$ into this formula, we obtain the following results for our derivative:
+Plugging in our optimal $\theta$ into this formula and calculating the numerical gradient with a $\delta$ of 0.00001, we obtain the following results for our derivative:
 \begin{table}[h]
 \centering
-\caption{Examining the effect of other variables}
+\caption{Examining the the numerical vs. analytic derivatives}
 \begin{tabular}{c|c|c}
-$M$&  & \multicolumn{2}{|c}{Threshold} \\\hline
-2.0       & 177               & 0.001   & 49           & 0.01      & 39     \\
-1.0       & 5                 & 0.01    & 49           & 0.001     & 50     \\
-0.1       & 61                & 0.1     & 50           & 0.0001    & 61     \\
-0.01      & 503               & 1.0     & 61           & 0.00001   & 72  
+$M$& $\lVert\nabla\text{SSE}(\theta)\rVert$ (numerical) & $d\text{SSE} (\theta)/d\theta$ (analytic)\\\hline
+0       &  $2.1067\cdot10^{-12}$  & $1.6653\cdot10^{-16}$   \\
+1       & $2.1165\cdot10^{-12}$  & 0.0103 \\
+3       & $1.7099\cdot10^{-11}$ & $7.9814\cdot10^{-10}$  \\
+9      &   $7.9814\cdot 10^{-10}$    & $-1.6414\cdot 10^{-07}$
 \end{tabular}
 \end{table}
 %LIANG GO FINISH THIS
+
 Now let us try minimizing the $\theta$ for our original dataset $(X, Y)$ drawn from a distribution following $y = \sin(x)$. Using gradient descent, we obtain the following results:
 
 
