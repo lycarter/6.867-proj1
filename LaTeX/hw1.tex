@@ -7,12 +7,11 @@
 \usepackage{graphicx}
 \usepackage{sidecap}
 \usepackage{float}
-\title{Regression with Gradient Descent\vspace{-3.5ex}}
+\title{Regression Variations\vspace{-3.5ex}}
 \begin{document}
 \newgeometry{top=.25in,left=1in,right=1in,bottom=1in}
 \maketitle
-\vspace{-3em}
-\section{}
+\vspace{-2em}
 First, we discuss variations on gradient descent, including analytic gradient descent, finite difference gradient descent, and Matlab's \texttt{fminunc}, which includes some variations such as adaptive step size, using a quadratic approximation instead of linear approximation, and using a 2-dimensional subspace to reduce computational complexity. First, we'll examine the analytic gradient descent, which relies on having an analytic gradient expression at all points in space.
 
 We'll refer to three example functions: the $n$-dimensional quadratic ``bowl'', $Q_n$, the $n$-dimensional inverted Gaussian (centered at $\mu = 0$, with $\Sigma = \mathbf I_n$), $N_n$, and the $n$-dimensional sum of $\sin$'s, $S_n$. These are defined as follows (leaving off the normalization constant on the inverted Gaussian for simplicity):
@@ -80,7 +79,7 @@ $$\theta = (\Phi^T\Phi)^{-1}\Phi^Ty$$
 given that
 $$\Phi = some matrix here$$
 while limited to our polynomial basis. We can easily test this by plotting our data $(X, Y)$ with our learned model $\theta^T\Phi(X)$ for varying values of $M$:
-We note that we can't have $M > 10$, or else we have too many parameters to adjust for the data points that we have. We can adjust for this using the \textit{Moore-Penrose inverse}, but we will not address it in detail here.\\
+We note that we can't have $M > 10$, or else we have too many parameters to adjust for the data points that we have. The reason the formula breaks down is that $\Phi^\intercal\Phi$ is no longer full rank, which means we can no longer simply take the inverse to find $\theta$. In other words, there are now many (in fact, infinitely many) sets of parameters that would perfectly fit the criteria. We can adjust for this using the \textit{Moore-Penrose inverse} which pulls the $\theta$ from the list with the smallest norm. We will not address this in detail here.\\
 However, we can generalize our basis functions to more than simply polynomials in $x$. In this way, we can introduce trigonometric bases, exponential bases, etc. to give us more flexibility in choosing the parameter $\theta$. Our ultimate goal is the minimize the sum of the squared errors, or $SSE(\theta)$, equal to
 $$\text{SSE}(\theta) = \sum_{i=1}^n (\theta^T\phi(x^{(i)}) - y^{(i)})^2$$.
 We can minimize this by using gradient descent, which we discussed earlier. We can then confirm our calculations analytically by computing the derivative of $\text{SSE}(\theta)$:
@@ -109,6 +108,11 @@ Where $\Phi = \phi(x)$. We then have the predictor function given by $\phi$ weig
 \endminipage
 \end{figure}
 The effect of $\lambda$ is clear in Figures \ref{fig:M3} and \ref{fig:M7}, where higher values of $\lambda$ lead to flatter, smoother approximations. As $M$ increases (especially relative to $n$), the values in $\theta$ begin rising enormously, but adding the $\lambda$ factor helps to keep them under control. For example, in this example with $M=7$, $\max \theta_i = 1595.9$ for $\lambda = 0$, but for $\lambda = .01$, $\max \theta_i = 1.7781$, a much more reasonable value, and far more likely to approximate the truth accurately. In particular, Figure 1.8 in Bishop nicely summarizes the assistance $\lambda$ gives in generalizing $\theta$.
+
+\section{}
+All this time, in applying various regression techniques, we have been assuming the use of our $\text{SSE}(\theta)$ function to minimize our $\theta$ (with the possible addition of a regularization term, e.g. $\lambda\lVert\theta\rVert^2$ in ridge regression). We see that a squared regularization term comes naturally in the context of Gaussians; if instead we used a linear loss based on the non-square norm (using $\lambda\lVert\theta\rVert$), we are pulling from a Laplace distribution - this regularization is commonly termed LASSO.\\
+However, in our case, we'll leave the regularization term alone and instead investigate changes in our $\text{SSE}(\theta)$ term. Here we'll use a linear model instead of a quadratic one, so that we sum our absolute errors to obtain our residual error.\\
+As this problem has no simple analytical solution, we can again make use of gradient descent, this time to solve for our parameter $\theta$, for the same varying values of lambda we used above in normal ridge regression:
 
 \end{document}
 
