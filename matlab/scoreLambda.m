@@ -2,7 +2,7 @@ function [train,test] = scoreLambda(l, X, Y, Xtest, Ytest)
 
 theta = linearRidgeRegression(l,X,Y);
 
-train = sum((X*theta - Y).^2);
-test = sum((Xtest*theta - Ytest).^2);
+train = sum(abs(X*theta - Y));
+test = sum(abs(Xtest*theta - Ytest));
 
 end
