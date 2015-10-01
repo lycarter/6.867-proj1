@@ -109,6 +109,17 @@ Where $\Phi = \phi(x)$. We then have the predictor function given by $\phi$ weig
 \end{figure}
 The effect of $\lambda$ is clear in Figures \ref{fig:M3} and \ref{fig:M7}, where higher values of $\lambda$ lead to flatter, smoother approximations. As $M$ increases (especially relative to $n$), the values in $\theta$ begin rising enormously, but adding the $\lambda$ factor helps to keep them under control. For example, in this example with $M=7$, $\max \theta_i = 1595.9$ for $\lambda = 0$, but for $\lambda = .01$, $\max \theta_i = 1.7781$, a much more reasonable value, and far more likely to approximate the truth accurately. In particular, Figure 1.8 in Bishop nicely summarizes the assistance $\lambda$ gives in generalizing $\theta$.
 
+Applying ridge regression to a real-world data set, we can also observe the effects of $\lambda$. Here, we apply ridge regression to a dataset regarding blogs, where the $x$ vector contains 280 metrics for each blog post, and $y$ is the number of comments in the first 24 hours. We can see the effect $\lambda$ has on the training error and testing error in figure \ref{fig:blogData}.
+
+\begin{figure}[!htb]
+\begin{center}
+\includegraphics[width=4in]{figures/blogData.png}
+\caption{Effect of $\lambda$ on training and test errors.}\label{fig:blogData}
+\end{center}
+\end{figure}
+
+From this, we conclude that $\lambda=10^8$ is the approximately optimal value of $\lambda$ for this problem.
+
 \section{}
 All this time, in applying various regression techniques, we have been assuming the use of our $\text{SSE}(\theta)$ function to minimize our $\theta$ (with the possible addition of a regularization term, e.g. $\lambda\lVert\theta\rVert^2$ in ridge regression). We see that a squared regularization term comes naturally in the context of Gaussians; if instead we used a linear loss based on the non-square norm (using $\lambda\lVert\theta\rVert$), we are pulling from a Laplace distribution - this regularization is commonly termed LASSO.\\
 However, in our case, we'll leave the regularization term alone and instead investigate changes in our $\text{SSE}(\theta)$ term. Here we'll use a linear model instead of a quadratic one, so that we sum our absolute errors to obtain our residual error.\\
