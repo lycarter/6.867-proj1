@@ -1,9 +1,0 @@
-function [ Theta ] = linearRidgeRegression( lambda, X, Y)
-%implementation of ridge regression, finds theta
-
-COND(lambda.*eye(280) + X' * X)
-
-Theta = (lambda .* eye(280) + X' * X) \( X' * Y );
-
-end
-
