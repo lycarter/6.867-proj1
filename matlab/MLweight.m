@@ -8,6 +8,6 @@ for n = 1:size(Phi, 1)
         Phi(n, m) = X(n, 1).^(m - 1);
     end
 end
-Theta = inv(Phi' * Phi) * Phi' * Y;
+Theta = ((Phi' * Phi) \ Phi') * Y;
 end
 
