@@ -79,10 +79,7 @@ Another way we can benchmark our gradient descent method is to perform basis fun
 We can begin by considering a simple polynomial basis; i.e. $\phi(x) = [1, x, x^2, \ldots , x^M]$ where $M$ is the degree of the polynomial we are considering. We wish to minimize our parameter $\theta$, which has a well-known analytic solution:
 $$\theta = (\Phi^T\Phi)^{-1}\Phi^Ty$$
 given that
-$$\Phi = \left( \begin{array}{cccc}
-1 & - & x^{(1)\intercal} & - \\
-\vdots &  & & \vdots \\
-1 & - & x^{(n)\intercal} & - \end{array} \right) $$
+$$\Phi = some matrix here$$
 while limited to our polynomial basis. We can easily test this by plotting our data $(X, Y)$ with our learned model $\theta^T\Phi(X)$ for varying values of $M$:
 
 We note that we can't have $M > 10$, or else we have too many parameters to adjust for the data points that we have. The reason the formula breaks down is that $\Phi^\intercal\Phi$ is no longer full rank, which means we can no longer simply take the inverse to find $\theta$. In other words, there are now many (in fact, infinitely many) sets of parameters that would perfectly fit the criteria. We can adjust for this using the \textit{Moore-Penrose inverse} which pulls the $\theta$ from the list with the smallest norm. We will not address this in detail here.
@@ -91,7 +88,7 @@ However, we can generalize our basis functions to more than simply polynomials i
 $$\text{SSE}(\theta) = \sum_{i=1}^n (\theta^T\phi(x^{(i)}) - y^{(i)})^2$$.
 We can minimize this by using gradient descent, which we discussed earlier. We can then confirm our calculations analytically by computing the derivative of $\text{SSE}(\theta)$:
 $$\frac{\partial}{\partial\theta}\Big(\sum_{i=1}^n (\theta^T\phi(x^{(i)}) - y^{(i)})^2\Big) = 2\sum_{i=1}^n \phi(x^{(i)})(\theta^T\phi(x^{(i)}) - y^{(i)})$$
-which we want to equal $0$ for the minimum values of $\theta$. Plugging in our optimal $\theta$ into this formula, we obtain the following results for our derivative:
+Plugging in our optimal $\theta$ into this formula, we obtain the following results for our derivative:
 
 Now let us try minimizing the $\theta$ for our original dataset $(X, Y)$ drawn from a distribution following $y = \sin(x)$. Using gradient descent, we obtain the following results:
 
@@ -100,7 +97,7 @@ It is tempting, to fit this data set, to use $\phi_1(x) = \sin(2\pi x), \ldots ,
 However, if we didn't already know anything about the data, guessing a basis of sine functions comes with a serious disadvantage. It guarantees that all your generated $\theta^T\phi(x)$ will be periodic in nature, when your actual data/observations really aren't. This can cause unnecessarily varying, and potentially totally off, data to be predicted.
 
 
-Here we examine ridge regression, which is a form of regression that attempts to minimize the coefficients of $\Theta$. It does this by imposing a penalty, $\lambda$, on the norm of the coefficients of $\Theta$. The analytic solution to this minimization is given by
+Here we examine ridge regression, which is a form of regression that attempts to minimize the coefficients of $\Theta$. It does this by imposing a penalty, $\lambda$, on the Euclidean norm of the coefficients of $\Theta$. The fact that we impose a penalty on the Euclidean norm is a direct result of considering the noise as a Gaussian. Considering the noise as a Laplacian distribution leads to imposing a penalty on the absolute value norm, while other noise distributions lead to yet more functions of $\theta$ to apply the penalty to. The analytic solution to this minimization is given by
 \[ \theta = (\Phi^\intercal \Phi + \lambda \mathbf{I})^{-1}\Phi^\intercal y \]
 Where $\Phi = \phi(x)$. We then have the predictor function given by $\phi$ weighted by $\theta$, eg, we would predict $y_{predicted} = \theta^\intercal \phi(x')$. We can see the effect $\lambda$ has on the result by examining a few values of $\lambda$ for the same dataset used previously (generated from $\sin(2\pi x)$).
 \begin{figure}[!htb]
@@ -113,13 +110,11 @@ Where $\Phi = \phi(x)$. We then have the predictor function given by $\phi$ weig
   \caption{$M=7$}\label{fig:M7}
 \endminipage
 \end{figure}
-The effect of $\lambda$ is clear in Figures \ref{fig:M3} and \ref{fig:M7}, where higher values of $\lambda$ lead to flatter, smoother approximations. As $M$ increases (especially relative to $n$), the values in $\theta$ begin rising enormously, but adding the $\lambda$ factor helps to keep them under control. For example, in this example with $M=7$, $\max \theta_i = 1595.9$ for $\lambda = 0$, but for $\lambda = .01$, $\max \theta_i = 1.7781$, a much more reasonable value, and far more likely to approximate the truth accurately.
+The effect of $\lambda$ is clear in Figures \ref{fig:M3} and \ref{fig:M7}, where higher values of $\lambda$ lead to flatter, smoother approximations. As $M$ increases (especially relative to $n$), the values in $\theta$ begin rising enormously, but adding the $\lambda$ factor helps to keep them under control. For example, in this example with $M=7$, $\max \theta_i = 1595.9$ for $\lambda = 0$, but for $\lambda = .01$, $\max \theta_i = 1.7781$, a much more reasonable value, and far more likely to approximate the truth accurately. In particular, Figure 1.8 in Bishop nicely summarizes the assistance $\lambda$ gives in generalizing $\theta$.
 
 All this time, in applying various regression techniques, we have been assuming the use of our $\text{SSE}(\theta)$ function to minimize our $\theta$ (with the possible addition of a regularization term, e.g. $\lambda\lVert\theta\rVert^2$ in ridge regression). We see that a squared regularization term comes naturally in the context of Gaussians; if instead we used a linear loss based on the non-square norm (using $\lambda\lVert\theta\rVert$), we are pulling from a Laplace distribution - this regularization is commonly termed LASSO.\\
 However, in our case, we'll leave the regularization term alone and instead investigate changes in our $\text{SSE}(\theta)$ term. Here we'll use a linear model instead of a quadratic one, so that we sum our absolute errors to obtain our residual error.\\
 As this problem has no simple analytical solution, we can again make use of gradient descent, this time to solve for our parameter $\theta$, for the same varying values of lambda we used above in normal ridge regression:
-
-
 
 \end{document}
 
