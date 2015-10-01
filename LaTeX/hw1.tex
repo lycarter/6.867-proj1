@@ -105,11 +105,8 @@ Now let us try minimizing the $\theta$ for our original dataset $(X, Y)$ drawn f
 
 It is tempting to fit this data set by using $\phi_1(x) = \sin(2\pi x), \ldots , \phi_M(2\pi Mx)$ as our basis set of functions. If we use these, our plots look much closer to the original function:\\
 
-However, if we didn't already know anything about the data, guessing a basis of sine functions comes with a serious disadvantage. It guarantees that all our generated $\theta^\intercal\phi(x)$ will be periodic in nature, when the actual data/observations really aren't. This can cause unnecessarily varying, and potentially completely incorrect, data to be predicted.\\
-
-Now let us try minimizing the $\theta$ for our original dataset $(X, Y)$ drawn from a distribution following $y = \sin(x)$. Using gradient descent, we obtain the following results:\\
-It is tempting, to fit this data set, to use $\phi_1(x) = \sin(2\pi x), \ldots , \phi_M(2\pi Mx)$ as our basis set of functions. If we use these, our plots look much closer to the real value:\\
-However, if we didn't already know anything about the data, guessing a basis of sine functions comes with a serious disadvantage. It guarantees that all your generated $\theta^\intercal\phi(x)$ will be periodic in nature, when your actual data/observations really aren't. This can cause unnecessarily varying, and potentially totally off, data to be predicted.
+However, if we didn't already know anything about the data, guessing a basis of only sinusoidal functions comes with a serious disadvantage. It guarantees that all our generated $\theta^\intercal\phi(x)$ will be periodic in nature, when the actual data/observations really aren't. This can cause unnecessarily varying, and potentially completely incorrect, data to be predicted.\\
+% LIANG GO FINISH THIS
 
 Here we examine ridge regression, which is a form of regression that attempts to minimize the coefficients of $\Theta$. It does this by imposing a penalty, $\lambda$, on the Euclidean norm of the coefficients of $\Theta$. The fact that we impose a penalty on the Euclidean norm is a direct result of considering the noise as a Gaussian. Considering the noise as a Laplacian distribution leads to imposing a penalty on the absolute value norm, while other noise distributions lead to yet more functions of $\theta$ to apply the penalty to. The analytic solution to this minimization is given by
 \[ \theta = (\Phi^\intercal \Phi + \lambda \mathbf{I})^{-1}\Phi^\intercal y \]
