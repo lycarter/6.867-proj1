@@ -9,12 +9,12 @@
 \usepackage{float}
 \title{Regression Variations\vspace{-3.5ex}}
 \begin{document}
-\newgeometry{top=.25in,left=1in,right=1in,bottom=1in}
+\newgeometry{top=0.75in,left=1in,right=1in,bottom=1.25in}
 \maketitle
 \vspace{-0.5em}
-In discussing regression with reference to machine learning, we are attempting to predict a pattern based on given some given data points that were generated over some distribution. To do this, we will often need to estimate some parameter $\theta$.
+A key feature of most machine learning models is their ability to learn and predict effectively; i.e. based on some given data points $X, Y$ that were generated over some distribution, a well-formed model should be able to predict some reasonable pattern. To do this, we will often need to estimate some parameter $\theta$ that characterizes what we use to generate our predicted function. The goal, then, is to choose the $\theta$ that leads to the minimum value of some error or loss function, and in this way minimize the error. This can be done in several ways, and a more formal and thorough treatment of this topic will be the subject of the remainder of this paper.\\
 
-First, we discuss variations on gradient descent, including analytic gradient descent, finite difference gradient descent, and Matlab's \texttt{fminunc}, which includes some variations such as adaptive step size, using a quadratic approximation instead of linear approximation, and using a 2-dimensional subspace to reduce computational complexity. First, we'll examine the analytic gradient descent, which relies on having an analytic gradient expression at all points in space.
+First, we discuss the use of a tool that we will use often in calculating the minimum - gradient descent. We investigate several variations on its implementation, including analytic gradient descent, finite difference gradient descent, and Matlab's \texttt{fminunc}, which includes some variations such as adaptive step size, using a quadratic approximation instead of linear approximation, and using a 2-dimensional subspace to reduce computational complexity. First, we'll examine the analytic gradient descent, which relies on having an analytic gradient expression at all points in space.
 
 We'll refer to three example functions: the $n$-dimensional quadratic ``bowl'', $Q_n$, the $n$-dimensional inverted Gaussian (centered at $\mu = 0$, with $\Sigma = \mathbf I_n$), $N_n$, and the $n$-dimensional sum of $\sin$'s, $S_n$. These are defined as follows (leaving off the normalization constant on the inverted Gaussian for simplicity):
 
@@ -53,7 +53,9 @@ $\Delta$  & Iterations        & $x_0$   & Iterations   & $\delta$  & Iterations 
 \end{tabular}
 \end{table}
 
-We notice that the finite differences and analytic methods yield the exact same number of iterations for all functions. This can be explained by examining the diagonal of the Hessian matrix for each of the functions - in all cases, the values are small, indicating low curvature, and thus that the function can be well-approximated by the linear finite difference approximation. Therefore, when examining the effects of other variables, we only present the numbers using the finite-difference gradient (the analytic gradient produces identical numbers). We may draw a few conclusions by examining the effects of other variables. As we decrease the step size, it takes longer to converge. However, increasing the step size beyond 1 causes the iteration to overshoot, resulting in an overall higher number of required iterations. Moving the starting point further from the minimum increases the number of iterations, but only slightly, because the gradient increases, which increases the step size proportionally. Finally, requiring a stricter convergence criteria via a smaller threshold increases the number of iterations, but only by a constant amount, because the gradient again ensures the step size is in proportion to the distance from the minimum.
+We notice that the finite differences and analytic methods yield the exact same number of iterations for all functions. This can be explained by examining the diagonal of the Hessian matrix for each of the functions - in all cases, the values are small, indicating low curvature, and thus that the function can be well-approximated by the linear finite difference approximation. Therefore, when examining the effects of other variables, we only present the numbers using the finite-difference gradient (the analytic gradient produces identical numbers).
+
+We may draw a few conclusions by examining the effects of other variables. As we decrease the step size, it takes longer to converge. However, increasing the step size beyond 1 causes the iteration to overshoot, resulting in an overall higher number of required iterations. Moving the starting point further from the minimum increases the number of iterations, but only slightly, because the gradient increases, which increases the step size proportionally. Finally, requiring a stricter convergence criteria via a smaller threshold increases the number of iterations, but only by a constant amount, because the gradient again ensures the step size is in proportion to the distance from the minimum.
 
 By plotting the difference between the finite differences approximation, we can see the accuracy achieved. Here, we again use $\delta = .01$. Figures \ref{fig:gradDifQ} through \ref{fig:gradDifS} are plots of $(\nabla f(\mathbf{x}) - \tilde{\nabla} f(\mathbf{x}))/f(\mathbf{x})$ for $x=(0,1)$.
 
@@ -72,29 +74,32 @@ By plotting the difference between the finite differences approximation, we can 
 \endminipage
 \end{figure}
 
-Given the scales of the plots, it is clear that the finite differences method is quite accurate for these functions over these distance scales. As noted, this is generally true when the diagonal entries of the Hessian matrix are small.
+Given the scales of the plots, it is clear that the finite differences method is quite accurate for these functions over these distance scales. As noted, this is generally true when the diagonal entries of the Hessian matrix are small.\\
 
-Another way we can benchmark our gradient descent method is to perform basis function regression on some given sample data points. Given, say, $10$ data points $X = x^{(1:10)}$ that are generated from a noisy distribution from $y = \sin(2\pi x)$, we'll try to estimate the generating function based on (a) the values at the data points $Y = y^{(1:10)}$ and (b) a basis set of functions.
+Now that we've established gradient descent as a reliable tool to help us calculate minima, we can benchmark it by applying it directly through performing basis function regression on some given sample data points. Given, say, $10$ data points $X = x^{(1:10)}$ that are generated from a noisy distribution from $y = \sin(2\pi x)$, we'll try to estimate the generating function based on (a) the values at the data points $Y = y^{(1:10)}$ and (b) a basis set of functions.
+
+Our ultimate goal is the minimize the sum of the squared errors of each of our proposed predictions, or $\text{SSE}(\theta)$, which is equal to
+$$\text{SSE}(\theta) = \sum_{i=1}^n (\theta^\intercal\phi(x^{(i)}) - y^{(i)})^2$$
 
 We can begin by considering a simple polynomial basis; i.e. $\phi(x) = [1, x, x^2, \ldots , x^M]$ where $M$ is the degree of the polynomial we are considering. We wish to minimize our parameter $\theta$, which has a well-known analytic solution:
-$$\theta = (\Phi^T\Phi)^{-1}\Phi^Ty$$
+$$\theta = (\Phi^\intercal\Phi)^{-1}\Phi^\intercal y$$
 given that
-$$\Phi = some matrix here$$
-while limited to our polynomial basis. We can easily test this by plotting our data $(X, Y)$ with our learned model $\theta^T\Phi(X)$ for varying values of $M$:
+$$\Phi = \left( \begin{array}{cccc}
+ 1 & - & x^{(1)\intercal} & - \\
+ \vdots &  & & \vdots \\
+ 1 & - & x^{(n)\intercal} & - \end{array} \right) $$
+while limited to our polynomial basis. We can easily test this by plotting our data $(X, Y)$ with our learned model $\theta^\intercal\Phi(X)$ for varying values of $M$:
 
 We note that we can't have $M > 10$, or else we have too many parameters to adjust for the data points that we have. The reason the formula breaks down is that $\Phi^\intercal\Phi$ is no longer full rank, which means we can no longer simply take the inverse to find $\theta$. In other words, there are now many (in fact, infinitely many) sets of parameters that would perfectly fit the criteria. We can adjust for this using the \textit{Moore-Penrose inverse} which pulls the $\theta$ from the list with the smallest norm. We will not address this in detail here.
 
-However, we can generalize our basis functions to more than simply polynomials in $x$. In this way, we can introduce trigonometric bases, exponential bases, etc. to give us more flexibility in choosing the parameter $\theta$. Our ultimate goal is the minimize the sum of the squared errors, or $SSE(\theta)$, equal to
-$$\text{SSE}(\theta) = \sum_{i=1}^n (\theta^T\phi(x^{(i)}) - y^{(i)})^2$$.
+However, we can generalize our basis functions to more than simply polynomials in $x$. In this way, we can introduce trigonometric bases, exponential bases, etc. to give us more flexibility in choosing the parameter $\theta$. 
 We can minimize this by using gradient descent, which we discussed earlier. We can then confirm our calculations analytically by computing the derivative of $\text{SSE}(\theta)$:
-$$\frac{\partial}{\partial\theta}\Big(\sum_{i=1}^n (\theta^T\phi(x^{(i)}) - y^{(i)})^2\Big) = 2\sum_{i=1}^n \phi(x^{(i)})(\theta^T\phi(x^{(i)}) - y^{(i)})$$
+$$\frac{\partial}{\partial\theta}\Big(\sum_{i=1}^n (\theta^\intercal\phi(x^{(i)}) - y^{(i)})^2\Big) = 2\sum_{i=1}^n \phi(x^{(i)})(\theta^\intercal\phi(x^{(i)}) - y^{(i)})$$
 Plugging in our optimal $\theta$ into this formula, we obtain the following results for our derivative:
 
-Now let us try minimizing the $\theta$ for our original dataset $(X, Y)$ drawn from a distribution following $y = \sin(x)$. Using gradient descent, we obtain the following results:
-
-It is tempting, to fit this data set, to use $\phi_1(x) = \sin(2\pi x), \ldots , \phi_M(2\pi Mx)$ as our basis set of functions. If we use these, our plots look much closer to the real value:
-
-However, if we didn't already know anything about the data, guessing a basis of sine functions comes with a serious disadvantage. It guarantees that all your generated $\theta^T\phi(x)$ will be periodic in nature, when your actual data/observations really aren't. This can cause unnecessarily varying, and potentially totally off, data to be predicted.
+Now let us try minimizing the $\theta$ for our original dataset $(X, Y)$ drawn from a distribution following $y = \sin(x)$. Using gradient descent, we obtain the following results:\\
+It is tempting, to fit this data set, to use $\phi_1(x) = \sin(2\pi x), \ldots , \phi_M(2\pi Mx)$ as our basis set of functions. If we use these, our plots look much closer to the real value:\\
+However, if we didn't already know anything about the data, guessing a basis of sine functions comes with a serious disadvantage. It guarantees that all your generated $\theta^\intercal\phi(x)$ will be periodic in nature, when your actual data/observations really aren't. This can cause unnecessarily varying, and potentially totally off, data to be predicted.\\
 
 
 Here we examine ridge regression, which is a form of regression that attempts to minimize the coefficients of $\Theta$. It does this by imposing a penalty, $\lambda$, on the Euclidean norm of the coefficients of $\Theta$. The fact that we impose a penalty on the Euclidean norm is a direct result of considering the noise as a Gaussian. Considering the noise as a Laplacian distribution leads to imposing a penalty on the absolute value norm, while other noise distributions lead to yet more functions of $\theta$ to apply the penalty to. The analytic solution to this minimization is given by
@@ -110,10 +115,12 @@ Where $\Phi = \phi(x)$. We then have the predictor function given by $\phi$ weig
   \caption{$M=7$}\label{fig:M7}
 \endminipage
 \end{figure}
-The effect of $\lambda$ is clear in Figures \ref{fig:M3} and \ref{fig:M7}, where higher values of $\lambda$ lead to flatter, smoother approximations. As $M$ increases (especially relative to $n$), the values in $\theta$ begin rising enormously, but adding the $\lambda$ factor helps to keep them under control. For example, in this example with $M=7$, $\max \theta_i = 1595.9$ for $\lambda = 0$, but for $\lambda = .01$, $\max \theta_i = 1.7781$, a much more reasonable value, and far more likely to approximate the truth accurately. In particular, Figure 1.8 in Bishop nicely summarizes the assistance $\lambda$ gives in generalizing $\theta$.
+The effect of $\lambda$ is clear in Figures \ref{fig:M3} and \ref{fig:M7}, where higher values of $\lambda$ lead to flatter, smoother approximations. As $M$ increases (especially relative to $n$), the values in $\theta$ begin rising enormously, but adding the $\lambda$ factor helps to keep them under control. For example, in this example with $M=7$, $\max \theta_i = 1595.9$ for $\lambda = 0$, but for $\lambda = .01$, $\max \theta_i = 1.7781$, a much more reasonable value, and far more likely to approximate the truth accurately. In particular, Figure 1.8 in Bishop nicely summarizes the assistance $\lambda$ gives in generalizing $\theta$.\\
 
-All this time, in applying various regression techniques, we have been assuming the use of our $\text{SSE}(\theta)$ function to minimize our $\theta$ (with the possible addition of a regularization term, e.g. $\lambda\lVert\theta\rVert^2$ in ridge regression). We see that a squared regularization term comes naturally in the context of Gaussians; if instead we used a linear loss based on the non-square norm (using $\lambda\lVert\theta\rVert$), we are pulling from a Laplace distribution - this regularization is commonly termed LASSO.\\
-However, in our case, we'll leave the regularization term alone and instead investigate changes in our $\text{SSE}(\theta)$ term. Here we'll use a linear model instead of a quadratic one, so that we sum our absolute errors to obtain our residual error.\\
+All this time, in applying various regression techniques, we have been assuming the use of our $\text{SSE}(\theta)$ function to minimize our $\theta$ (with the possible addition of a regularization term, e.g. $\lambda\lVert\theta\rVert^2$ in ridge regression). We see that a squared regularization term comes naturally in the context of Gaussians; if instead we used a linear loss based on the non-square norm (using $\lambda\lVert\theta\rVert$), we are pulling from a Laplace distribution - this regularization is commonly termed LASSO.
+
+However, in our case, we'll leave the regularization term alone and instead investigate changes in our $\text{SSE}(\theta)$ term. Here we'll use a linear model instead of a quadratic one, so that we sum our absolute errors to obtain our residual error.
+
 As this problem has no simple analytical solution, we can again make use of gradient descent, this time to solve for our parameter $\theta$, for the same varying values of lambda we used above in normal ridge regression:
 
 \end{document}
