@@ -90,15 +90,46 @@ given that $\Phi = \phi(x)$ generally, and specifically
  1 &  x^{(1)} & \ldots & (x^{(1)})^M \\
  \vdots & \vdots & & \vdots \\
  1 &  x^{(n)} & \ldots & (x^{(n)})^M \end{array} \right) \]
-for this polynomial basis. We can easily test this by plotting our data $(X, Y)$ with our learned model $\theta^\intercal\phi(X)$ for varying values of $M$:
+for this polynomial basis. We can easily test this by plotting our data $(X, Y)$ with our learned model $\theta^\intercal\phi(X)$ for varying values of $M$, shown in figures \ref{fig:basism0} through \ref{fig:basism9}.
+
+\begin{figure}[h!]
+\minipage{0.5\textwidth}
+  \includegraphics[width=\linewidth]{figures/basism0.png}
+  \caption{$M = 0$}\label{fig:basism0}
+\endminipage\hfill
+\minipage{0.5\textwidth}
+  \includegraphics[width=\linewidth]{figures/basism1.png}
+  \caption{$M = 1$}\label{fig:basism1}
+\endminipage\hfill
+\minipage{0.5\textwidth}
+  \includegraphics[width=\linewidth]{figures/basism3.png}
+  \caption{$M = 3$}\label{fig:basism3}
+\endminipage\hfill
+\minipage{0.5\textwidth}
+  \includegraphics[width=\linewidth]{figures/basism9.png}
+  \caption{$M = 9$}\label{fig:basism9}
+\endminipage
+\end{figure}
 
 We note that we can't have $M > 9$, or else we have too many parameters to adjust for the data points that we have. The reason the formula breaks down is that $\Phi^\intercal\Phi$ is no longer full rank, which means we can no longer simply take the inverse to find $\theta$. In other words, there are now many (in fact, infinitely many) sets of parameters that would perfectly fit the criteria. We can adjust for this using the \textit{Moore-Penrose inverse} which pulls the $\theta$ from the list with the smallest norm. We will not address this in detail here.
 
-However, we can generalize our basis functions to more than simply polynomials in $x$. In this way, we can introduce trigonometric bases, exponential bases, etc. to give us more flexibility in choosing the parameter $\theta$. 
+From figure \ref{fig:basism9}, it's also clear that when $M$ is too high, we begin to overfit our data, even though the training error here is $0$. We will come back to this problem later, when we deal with regularization.
+
+At the moment, however, we can generalize our basis functions to more than simply polynomials in $x$. In this way, we can introduce trigonometric bases, exponential bases, etc. to give us more flexibility in choosing the parameter $\theta$. 
 We can minimize this by using gradient descent, which we discussed earlier. We can then confirm our calculations analytically by computing the derivative of $\text{SSE}(\theta)$:
 \[ \frac{\partial}{\partial\theta}\Big(\sum_{i=1}^n (\theta^\intercal\phi(x^{(i)}) - y^{(i)})^2\Big) = 2\sum_{i=1}^n \phi(x^{(i)})(\theta^\intercal\phi(x^{(i)}) - y^{(i)}) \]
 Plugging in our optimal $\theta$ into this formula, we obtain the following results for our derivative:
-
+\begin{table}[h]
+\centering
+\caption{Examining the effect of other variables}
+\begin{tabular}{c|c|c}
+$M$&  & \multicolumn{2}{|c}{Threshold} \\\hline
+2.0       & 177               & 0.001   & 49           & 0.01      & 39     \\
+1.0       & 5                 & 0.01    & 49           & 0.001     & 50     \\
+0.1       & 61                & 0.1     & 50           & 0.0001    & 61     \\
+0.01      & 503               & 1.0     & 61           & 0.00001   & 72  
+\end{tabular}
+\end{table}
 %LIANG GO FINISH THIS
 Now let us try minimizing the $\theta$ for our original dataset $(X, Y)$ drawn from a distribution following $y = \sin(x)$. Using gradient descent, we obtain the following results:
 
