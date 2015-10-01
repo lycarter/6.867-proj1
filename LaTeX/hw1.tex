@@ -12,11 +12,13 @@
 \newgeometry{top=0.75in,left=1in,right=1in,bottom=1.25in}
 \maketitle
 \vspace{-0.5em}
-A key feature of most machine learning models is their ability to learn and predict effectively; i.e. based on some given data points $X, Y$ that were generated over some distribution, a well-formed model should be able to predict some reasonable pattern. To do this, we will often need to estimate some parameter $\theta$ that characterizes what we use to generate our predicted function. The goal, then, is to choose the $\theta$ that leads to the minimum value of some error or loss function, and in this way minimize the error. This can be done in several ways, and a more formal and thorough treatment of this topic will be the subject of the remainder of this paper.\\
+\begin{abstract}
+A key feature of most machine learning models is their ability to learn and predict effectively; i.e. based on some given data points $X, Y$ that were generated non-randomly (with error given by a distribution), a well-formed model should be able to predict some reasonable pattern. To do this, we will often need to estimate some parameter $\theta$ that assigns weights to terms in our predicted function. The goal, then, is to choose the $\theta$ that leads to the minimum value of some error or loss function, and in this way minimize the error. This can be done in several ways, and a more formal and thorough treatment of this topic will be the subject of the remainder of this paper.\\
+\end{abstract}
 
-First, we discuss the use of a tool that we will use often in calculating the minimum - gradient descent. We investigate several variations on its implementation, including analytic gradient descent, finite difference gradient descent, and Matlab's \texttt{fminunc}, which includes some variations such as adaptive step size, using a quadratic approximation instead of linear approximation, and using a 2-dimensional subspace to reduce computational complexity. First, we'll examine the analytic gradient descent, which relies on having an analytic gradient expression at all points in space.
+First, we discuss the use of a tool that we will use often in calculating the minimum - gradient descent. We investigate several variations on its implementation, including analytic gradient descent, finite difference gradient descent, and Matlab's \texttt{fminunc}, which includes some variations such as adaptive step size, using a quadratic approximation instead of linear approximation, and using a 2-dimensional subspace to reduce computational complexity. First, we'll examine the analytic gradient descent, which relies on having an analytic expression for the gradient.
 
-We'll refer to three example functions: the $n$-dimensional quadratic ``bowl'', $Q_n$, the $n$-dimensional inverted Gaussian (centered at $\mu = 0$, with $\Sigma = \mathbf I_n$), $N_n$, and the $n$-dimensional sum of $\sin$'s, $S_n$. These are defined as follows (leaving off the normalization constant on the inverted Gaussian for simplicity):
+We'll refer to three example functions: the $n$-dimensional quadratic ``bowl'', $Q_n$, the $n$-dimensional inverted Gaussian (centered at $\mu = 0$, with $\Sigma = \mathbf I_n$), $N_n$, and the $n$-dimensional sum of sines, $S_n$. These are defined as follows (leaving off the normalization constant on the inverted Gaussian for simplicity):
 
 \[ Q_n = \left\| \mathbf x \right\| ^2 \]
 
@@ -38,7 +40,7 @@ $n$& $Q_n$         & $N_n$        & $S_n$   & $Q_n$              & $N_n$   & $S_
 \end{tabular}
 \end{table}
 
-Focusing on just $S_n$, and leaving the step size, starting point, and threshold the same unless otherwise noted, we may also examine the effects of each variable (defaulting to $n=5$:
+Focusing on just $S_n$, and leaving the step size, starting point, and threshold the same unless otherwise noted, we may also examine the effects of each variable (defaulting to $n=5$):
 
 \begin{table}[h]
 \centering
@@ -76,26 +78,28 @@ By plotting the difference between the finite differences approximation, we can 
 
 Given the scales of the plots, it is clear that the finite differences method is quite accurate for these functions over these distance scales. As noted, this is generally true when the diagonal entries of the Hessian matrix are small.\\
 
-Now that we've established gradient descent as a reliable tool to help us calculate minima, we can benchmark it by applying it directly through performing basis function regression on some given sample data points. Given, say, $10$ data points $X = x^{(1:10)}$ that are generated from a noisy distribution from $y = \sin(2\pi x)$, we'll try to estimate the generating function based on (a) the values at the data points $Y = y^{(1:10)}$ and (b) a basis set of functions.
+Now that we've established gradient descent as a reliable tool to help us calculate minima, we can benchmark it by applying it directly through performing basis function regression on some given sample data points. Given, say, $10$ data points $X = x^{(1:10)}$ that are generated from a noisy distribution around $y = \sin(2\pi x)$, we'll try to estimate the generating function based on (a) the values at the data points $Y = y^{(1:10)}$ and (b) a basis set of functions.
 
 Our ultimate goal is the minimize the sum of the squared errors of each of our proposed predictions, or $\text{SSE}(\theta)$, which is equal to
-$$\text{SSE}(\theta) = \sum_{i=1}^n (\theta^\intercal\phi(x^{(i)}) - y^{(i)})^2$$
+\[ \text{SSE}(\theta) = \sum_{i=1}^n (\theta^\intercal\phi(x^{(i)}) - y^{(i)})^2 \]
 
 We can begin by considering a simple polynomial basis; i.e. $\phi(x) = [1, x, x^2, \ldots , x^M]$ where $M$ is the degree of the polynomial we are considering. We wish to minimize our parameter $\theta$, which has a well-known analytic solution:
-$$\theta = (\Phi^\intercal\Phi)^{-1}\Phi^\intercal y$$
-given that
-$$\Phi = \left( \begin{array}{cccc}
- 1 & - & x^{(1)\intercal} & - \\
- \vdots &  & & \vdots \\
- 1 & - & x^{(n)\intercal} & - \end{array} \right) $$
-while limited to our polynomial basis. We can easily test this by plotting our data $(X, Y)$ with our learned model $\theta^\intercal\Phi(X)$ for varying values of $M$:
+\[ \theta = (\Phi^\intercal\Phi)^{-1}\Phi^\intercal y \]
+given that $\Phi = \phi(x)$ generally, and specifically
+\[ \Phi = \left( \begin{array}{cccc}
+ 1 &  x^{(1)} & \ldots & (x^{(1)})^M \\
+ \vdots & \vdots & & \vdots \\
+ 1 &  x^{(n)} & \ldots & (x^{(n)})^M \end{array} \right) \]
+for this polynomial basis. We can easily test this by plotting our data $(X, Y)$ with our learned model $\theta^\intercal\phi(X)$ for varying values of $M$:
 
-We note that we can't have $M > 10$, or else we have too many parameters to adjust for the data points that we have. The reason the formula breaks down is that $\Phi^\intercal\Phi$ is no longer full rank, which means we can no longer simply take the inverse to find $\theta$. In other words, there are now many (in fact, infinitely many) sets of parameters that would perfectly fit the criteria. We can adjust for this using the \textit{Moore-Penrose inverse} which pulls the $\theta$ from the list with the smallest norm. We will not address this in detail here.
+We note that we can't have $M > 9$, or else we have too many parameters to adjust for the data points that we have. The reason the formula breaks down is that $\Phi^\intercal\Phi$ is no longer full rank, which means we can no longer simply take the inverse to find $\theta$. In other words, there are now many (in fact, infinitely many) sets of parameters that would perfectly fit the criteria. We can adjust for this using the \textit{Moore-Penrose inverse} which pulls the $\theta$ from the list with the smallest norm. We will not address this in detail here.
 
 However, we can generalize our basis functions to more than simply polynomials in $x$. In this way, we can introduce trigonometric bases, exponential bases, etc. to give us more flexibility in choosing the parameter $\theta$. 
 We can minimize this by using gradient descent, which we discussed earlier. We can then confirm our calculations analytically by computing the derivative of $\text{SSE}(\theta)$:
-$$\frac{\partial}{\partial\theta}\Big(\sum_{i=1}^n (\theta^\intercal\phi(x^{(i)}) - y^{(i)})^2\Big) = 2\sum_{i=1}^n \phi(x^{(i)})(\theta^\intercal\phi(x^{(i)}) - y^{(i)})$$
+\[ \frac{\partial}{\partial\theta}\Big(\sum_{i=1}^n (\theta^\intercal\phi(x^{(i)}) - y^{(i)})^2\Big) = 2\sum_{i=1}^n \phi(x^{(i)})(\theta^\intercal\phi(x^{(i)}) - y^{(i)}) \]
 Plugging in our optimal $\theta$ into this formula, we obtain the following results for our derivative:
+
+%LIANG GO FINISH THIS
 
 Now let us try minimizing the $\theta$ for our original dataset $(X, Y)$ drawn from a distribution following $y = \sin(x)$. Using gradient descent, we obtain the following results:\\
 It is tempting, to fit this data set, to use $\phi_1(x) = \sin(2\pi x), \ldots , \phi_M(2\pi Mx)$ as our basis set of functions. If we use these, our plots look much closer to the real value:\\
