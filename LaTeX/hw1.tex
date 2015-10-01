@@ -88,7 +88,11 @@ We can minimize this by using gradient descent, which we discussed earlier. We c
 $$\frac{\partial}{\partial\theta}\Big(\sum_{i=1}^n (\theta^T\phi(x^{(i)}) - y^{(i)})^2\Big) = 2\sum_{i=1}^n \phi(x^{(i)})(\theta^T\phi(x^{(i)}) - y^{(i)})$$
 Plugging in our optimal $\theta$ into this formula, we obtain the following results for our derivative:
 
+Now let us try minimizing the $\theta$ for our original dataset $(X, Y)$ drawn from a distribution following $y = \sin(x)$. Using gradient descent, we obtain the following results:
 
+It is tempting, to fit this data set, to use $\phi_1(x) = \sin(2\pi x), \ldots , \phi_M(2\pi Mx)$ as our basis set of functions. If we use these, our plots look much closer to the real value:
+
+However, if we didn't already know anything about the data, guessing a basis of sine functions comes with a serious disadvantage. It guarantees that all your generated $\theta^T\phi(x)$ will be periodic in nature, when your actual data/observations really aren't. This can cause unnecessarily varying, and potentially totally off, data to be predicted.
 
 
 
