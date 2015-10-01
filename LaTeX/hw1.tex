@@ -130,17 +130,15 @@ $M$& $\lVert\nabla\text{SSE}(\theta)\rVert$ (numerical) & $d\text{SSE} (\theta)/
 9      &   $7.9814\cdot 10^{-10}$    & $-1.6414\cdot 10^{-07}$
 \end{tabular}
 \end{table}
-%LIANG GO FINISH THIS
 
-Now let us try minimizing the $\theta$ for our original dataset $(X, Y)$ drawn from a distribution following $y = \sin(x)$. Using gradient descent, we obtain the following results:
+Now let us try minimizing the $\theta$ with gradient descent, to find a minimum for the loss so that our $\theta$ is optimal. We obtain the following results:
 
 
-It is tempting to fit this data set by using $\phi_1(x) = \sin(2\pi x), \ldots , \phi_M(2\pi Mx)$ as our basis set of functions. If we use these, our plots look much closer to the original function:\\
+In addition, it is tempting to fit this data set by using $\phi_1(x) = \sin(2\pi x), \ldots , \phi_M(2\pi Mx)$ as our basis set of functions. If we use these, our plots look much closer to the original function:
 
 However, if we didn't already know anything about the data, guessing a basis of only sinusoidal functions comes with a serious disadvantage. It guarantees that all our generated $\theta^\intercal\phi(x)$ will be periodic in nature, when the actual data/observations really aren't. This can cause unnecessarily varying, and potentially completely incorrect, data to be predicted.\\
-% LIANG GO FINISH THIS
 
-Here we examine ridge regression, which is a form of regression that attempts to minimize the coefficients of $\Theta$. It does this by imposing a penalty, $\lambda$, on the Euclidean norm of the coefficients of $\Theta$. The fact that we impose a penalty on the Euclidean norm is a direct result of considering the noise as a Gaussian. Considering the noise as a Laplacian distribution leads to imposing a penalty on the absolute value norm, while other noise distributions lead to yet more functions of $\theta$ to apply the penalty to. The analytic solution to this minimization is given by
+Recall that earlier, we had the problem that having too high of an $M$ could cause overfitting to the training data. Now we will examine ridge regression, which is a form of regression that attempts to minimize the coefficients of $\Theta$; this will reduce the magnitudes of the coefficients of a high-order polynomial to more reasonable sizes. It does this by imposing a penalty, $\lambda$, on the Euclidean norm of the coefficients of $\Theta$. The fact that we impose a penalty on the Euclidean norm is a direct result of considering the noise as a Gaussian. Considering the noise as a Laplacian distribution leads to imposing a penalty on the absolute value norm, while other noise distributions lead to yet more functions of $\theta$ to apply the penalty to. The analytic solution to this minimization is given by
 \[ \theta = (\Phi^\intercal \Phi + \lambda \mathbf{I})^{-1}\Phi^\intercal y \]
 Where $\Phi = \phi(x)$. We then have the predictor function given by $\phi$ weighted by $\theta$, eg, we would predict $y_{predicted} = \theta^\intercal \phi(x')$. We can see the effect $\lambda$ has on the result by examining a few values of $\lambda$ for the same dataset used previously (generated from $\sin(2\pi x)$).
 \begin{figure}[!htb]
