@@ -128,10 +128,10 @@ $M$& $\lVert\nabla\text{SSE}(\theta)\rVert$ (numerical) & $d\text{SSE} (\theta)/
 \end{tabular}
 \end{table}
 
-Now let us try minimizing the $\theta$ with gradient descent, to find a minimum for the loss so that our $\theta$ is optimal. We obtain the following results:
+%Now let us try minimizing the $\theta$ with gradient descent, to find a minimum for the loss so that our $\theta$ is optimal. We obtain the following results:
 
 
-In addition, it is tempting to fit this data set by using $\phi_1(x) = \sin(2\pi x), \ldots , \phi_M(2\pi Mx)$ as our basis set of functions. If we use these, our plots in figures \ref{fig:sin1} to \ref{fig:sin6} look much closer to the original function.
+In addition, it is tempting to fit this data set by using $\phi_1(x) = \sin(2\pi x), \ldots , \phi_M(2\pi Mx)$ as our basis set of functions. If we use these, our plots in figures \ref{fig:sin1} to \ref{fig:sin6} look much closer to the original function. However, if we didn't already know anything about the data, guessing a basis of only sinusoidal functions comes with a serious disadvantage. It guarantees that all our generated $\theta^\intercal\phi(x)$ will be periodic in nature, when the actual data/observations really aren't. This can cause unnecessarily varying, and potentially completely incorrect, data to be predicted.\\
 \begin{figure}[h!]
 \minipage{0.33\textwidth}
   \includegraphics[width=\linewidth]{figures/sin1.png}
@@ -147,7 +147,7 @@ In addition, it is tempting to fit this data set by using $\phi_1(x) = \sin(2\pi
 \endminipage\hfill
 \end{figure}
 
-However, if we didn't already know anything about the data, guessing a basis of only sinusoidal functions comes with a serious disadvantage. It guarantees that all our generated $\theta^\intercal\phi(x)$ will be periodic in nature, when the actual data/observations really aren't. This can cause unnecessarily varying, and potentially completely incorrect, data to be predicted.\\
+
 
 \section{Ridge Regression}
 
