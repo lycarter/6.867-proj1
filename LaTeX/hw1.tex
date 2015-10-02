@@ -41,9 +41,9 @@ $n$& $Q_n$         & $N_n$        & $S_n$   & $Q_n$              & $N_n$   & $S_
 \end{tabular}
 \end{table}
 
-Focusing on just $S_n$, and leaving the step size, starting point, and threshold the same unless otherwise noted, we may also examine the effects of each variable (defaulting to $n=5$):
+Focusing on just $S_n$, and leaving the step size, starting point, and threshold the same unless otherwise noted, we may also examine the effects of each variable (defaulting to $n=5$) in table 2.
 
-\begin{table}[h]
+\begin{table}[h!]
 \centering
 \caption{Examining the effect of other variables}
 \begin{tabular}{cc|cc|cc}
@@ -179,7 +179,7 @@ The effect of $\lambda$ is clear in Figures \ref{fig:M3} and \ref{fig:M7}, where
 Applying ridge regression to a real-world data set, we can also observe the effects of $\lambda$. Here, we apply ridge regression to a dataset regarding blogs, where the $x$ vector contains 280 metrics for each blog post, and $y$ is the number of comments in the first 24 hours. We can see the effect $\lambda$ has on the training error and testing error in figure \ref{fig:blogData}. From this, we conclude that $\lambda=10^8$ is the approximately optimal value of $\lambda$ for this problem.\\
 
 \section{LAD}
-All this time, in applying various regression techniques, we have been assuming the use of our $\text{SSE}(\theta)$ function to minimize our $\theta$ (with the possible addition of a regularization term, e.g. $\lambda\lVert\theta\rVert^2$ in ridge regression). We see that a squared regularization term comes naturally in the context of Gaussians; if instead we used a linear loss based on the non-square norm (using $\lambda\lVert\theta\rVert$), we are pulling from a Laplace distribution - this regularization is commonly termed LASSO.
+All this time, in applying various regression techniques, we have been assuming the use of our convenient $\text{SSE}(\theta)$ function to minimize our $\theta$ (with the possible addition of a regularization term, e.g. $\lambda\lVert\theta\rVert^2$ in ridge regression). We see that a squared regularization term comes naturally in the context of Gaussians; if instead we used a linear loss based on the non-square norm (using $\lambda\lVert\theta\rVert$), we are pulling from a Laplace distribution - this regularization is commonly termed LASSO.
 
 However, in our case, we'll leave the regularization term alone and instead investigate changes in our $\text{SSE}(\theta)$ term. Here we can use a linear model instead of a quadratic one, so that we sum our absolute errors to obtain our residual error. This method is called ``LAD'' (least absolute deviations):
 
