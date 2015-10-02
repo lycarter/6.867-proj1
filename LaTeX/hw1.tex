@@ -1,4 +1,4 @@
-\documentclass[11pt,letterpaper]{article}
+\documentclass[10pt,letterpaper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath}
 \usepackage{amsfonts}
@@ -150,11 +150,12 @@ In addition, it is tempting to fit this data set by using $\phi_1(x) = \sin(2\pi
 However, if we didn't already know anything about the data, guessing a basis of only sinusoidal functions comes with a serious disadvantage. It guarantees that all our generated $\theta^\intercal\phi(x)$ will be periodic in nature, when the actual data/observations really aren't. This can cause unnecessarily varying, and potentially completely incorrect, data to be predicted.\\
 
 \section{Ridge Regression}
+
 Recall that earlier, we had the problem that having too high of an $M$ could cause overfitting to the training data. Now we will examine ridge regression, which is a form of regression that attempts to minimize the coefficients of $\Theta$; this will reduce the magnitudes of the coefficients of a high-order polynomial to more reasonable sizes. It does this by imposing a penalty, $\lambda$, on the Euclidean (squared) norm of the coefficients of $\Theta$:
 $$\theta_{\text{ridge}} = \text{argmin}_\theta\sum_{i=0}^n(y^{(i)} - \theta^\intercal\phi(x^{(i)}))^2 + \lambda\lVert\theta\rVert^2$$
 The fact that we impose a penalty on the Euclidean norm is a direct result of considering the noise as a Gaussian. Considering the noise as a Laplacian distribution leads to imposing a penalty on the absolute value norm, while other noise distributions lead to yet more functions of $\theta$ to apply the penalty to. The first term is simply $\text{SSE}(\theta)$, so it isn't surprising that the analytic solution to this minimization is similar to that of just $\text{SSE}(\theta)$; it's given by
 \[ \theta = (\Phi^\intercal \Phi + \lambda \mathbf{I})^{-1}\Phi^\intercal y \]
-where $\Phi = \phi(X)$. We then have the predictor function given by $\phi$ weighted by $\theta$, eg, we would predict $y_{predicted} = \theta^\intercal \phi(x')$. We can see the effect $\lambda$ has on the result by examining a few values of $\lambda$ for the same dataset used previously (generated from $\sin(2\pi x)$).
+where $\Phi = \phi(X)$. We then have the predictor function given by $\phi$ weighted by $\theta$, eg, we would predict $y_{predicted} = \theta^\intercal \phi(x')$.
 \begin{figure}[!htb]
 \minipage{0.49\textwidth}
   \includegraphics[width=\linewidth]{figures/M3.png}
@@ -165,6 +166,8 @@ where $\Phi = \phi(X)$. We then have the predictor function given by $\phi$ weig
   \caption{$M=7$}\label{fig:M7}
 \endminipage
 \end{figure}
+We can see the effect $\lambda$ has on the result by examining a few values of $\lambda$ for the same dataset used previously (generated from $\sin(2\pi x)$).
+
 The effect of $\lambda$ is clear in Figures \ref{fig:M3} and \ref{fig:M7}, where higher values of $\lambda$ lead to flatter, smoother approximations. As $M$ increases (especially relative to $n$), the values in $\theta$ begin rising enormously, but adding the $\lambda$ factor helps to keep them under control. For example, in this example with $M=7$, $\max \theta_i = 1595.9$ for $\lambda = 0$, but for $\lambda = .01$, $\max \theta_i = 1.7781$, a much more reasonable value, and far more likely to approximate the truth accurately. In particular, Figure 1.8 in Bishop nicely summarizes the assistance $\lambda$ gives in generalizing $\theta$.
 
 \begin{figure}[!h]
@@ -184,7 +187,10 @@ $$\theta_{\text{LAD}} = \text{argmin}_\theta\sum_{i=0}^n|y^{(i)} - \theta^\inter
 
 Note that we are no longer minimizing anything similar to $\text{SSE}(\theta)$. As this problem has no simple analytical solution, we can again make use of gradient descent, this time to solve for our parameter $\theta$, for the same varying values of lambda we used above in normal ridge regression:
 
-The results are expected; in general, we find that least absolute deviations is more robust than least squares regression, as it is less susceptible to outliers in the dataset. This is an especially important point - if our data includes several high-valued outliers, then they can potentially have a drastic effect on the generated model.
+The results are expected; in general, we find that least absolute deviations is more robust than least squares regression, as it is less susceptible to outliers in the dataset. This is an especially important point - if we don't wish for our model to give heavier weight to outliers, then LAD is the better choice.
+
+Ridge regression, however, produces results that are more stable, with the derivative falling off more slowly and the solution being unique. It has the advantage of having a simple, standard and well-known analytic solution that is more easily implemented. In addition, if we want outliers to have more effect on our model, then we should choose ridge regression. The choice of regression function is entirely up to the characterics of the data we would like to model.
+
 \end{document}
 
 

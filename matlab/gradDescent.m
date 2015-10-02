@@ -9,6 +9,5 @@ while abs(f(x0) - f(xn)) > threshold
     x0 = xn;
     xn = xn - step*grad;
 end
-iterations
 min = xn;
 end

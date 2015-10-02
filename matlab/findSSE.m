@@ -5,7 +5,7 @@ function [ SSE, derivative, grad ] = findSSE(X, Y, theta )
 SSE = 0;
 M = length(theta);
 for n = 1:length(X)
-    SSE = SSE + (Y(n, 1) - theta * phii2(M, X(n, 1))).^2; %some things here to add to the sum
+    SSE = SSE + (Y(n, 1) - theta * phii(M, X(n, 1))).^2; %some things here to add to the sum
 end
 
 grad = zeros(length(theta), 1);
