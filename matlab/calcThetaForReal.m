@@ -1,0 +1,20 @@
+function theta = calcThetaForReal(lambda, M,X,Y)
+
+Phi = zeros(length(X), M+1);
+for n = 1:size(Phi,1)
+    for m = 1:size(Phi,2)
+        Phi(n,m) = X(n).^(m-1);
+    end
+end
+
+Phi
+
+theta0 = zeros(M+1,1);
+
+err = @(theta)sum(abs(theta'*Phi' - Y)) + lambda*sum((theta).^2);
+
+options = optimoptions(@fminunc,'Display','iter','Algorithm','quasi-newton');
+
+theta = fminunc(err, theta0, options);
+
+end

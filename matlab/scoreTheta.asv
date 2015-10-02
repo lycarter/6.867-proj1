@@ -1,7 +1,5 @@
 function [train,test] = scoreTheta(theta, X, Y, Xtest, Ytest)
 
-M = length(theta) - 1;
-
 Phi = zeros(length(X), M+1);
 for n = 1:size(Phi,1)
     for m = 1:size(Phi,2)
@@ -17,6 +15,6 @@ for n = 1:size(Phitest,1)
 end
 
 train = sum((theta'*Phi' - Y).^2);
-test = sum((theta'*Phitest' - Ytest).^2);
+test = sum((theta - Ytest).^2);
 
 end
