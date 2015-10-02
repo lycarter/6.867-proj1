@@ -115,7 +115,7 @@ From figure \ref{fig:basism9}, it's also clear that when $M$ is too high, we beg
 At the moment, however, we can generalize our basis functions to more than simply polynomials in $x$. In this way, we can introduce trigonometric bases, exponential bases, etc. to give us more flexibility in choosing the parameter $\theta$. 
 We can minimize this by using gradient descent, which we discussed earlier. We can then confirm our calculations analytically by computing the derivative of $\text{SSE}(\theta)$:
 \[ \frac{\partial}{\partial\theta}\Big(\sum_{i=1}^n (\theta^\intercal\phi(x^{(i)}) - y^{(i)})^2\Big) = 2\sum_{i=1}^n \phi(x^{(i)})(\theta^\intercal\phi(x^{(i)}) - y^{(i)}) \]
-Plugging in our optimal $\theta$ into this formula and calculating the numerical gradient with a $\delta$ of 0.00001, we obtain the following results for our derivative:
+Plugging in our optimal $\theta$ into this formula and calculating the numerical gradient with a $\delta$ of 0.00001, we obtain the following results for our derivative, confirming the optimality of $\theta$:
 \begin{table}[h]
 \centering
 \caption{Examining the the numerical vs. analytic derivatives}
@@ -128,7 +128,7 @@ $M$& $\lVert\nabla\text{SSE}(\theta)\rVert$ (numerical) & $d\text{SSE} (\theta)/
 \end{tabular}
 \end{table}
 
-%Now let us try minimizing the $\theta$ with gradient descent, to find a minimum for the loss so that our $\theta$ is optimal. We obtain the following results:
+Optimizing the SSE via gradient descent reveals a few interesting characteristics of gradient descent, especially as compared to more sophisticated optimizers such as Matlab's \texttt{fminunc}. Firstly, if our initial guess is worse, we will require more iterations to reach our final optimization. This is mitigated slightly by scaling the step size by the gradient, but this only really works when the gradient is well-behaved. Similarly, tightening the convergence threshold increases the number of required iterations. This is also discussed further at the end of Section 1, which discusses the effect of the Hessian matrix on the required number of iterations.
 
 
 In addition, it is tempting to fit this data set by using $\phi_1(x) = \sin(2\pi x), \ldots , \phi_M(2\pi Mx)$ as our basis set of functions. If we use these, our plots in figures \ref{fig:sin1} to \ref{fig:sin6} look much closer to the original function. However, if we didn't already know anything about the data, guessing a basis of only sinusoidal functions comes with a serious disadvantage. It guarantees that all our generated $\theta^\intercal\phi(x)$ will be periodic in nature, when the actual data/observations really aren't. This can cause unnecessarily varying, and potentially completely incorrect, data to be predicted.\\
@@ -189,14 +189,14 @@ Note that we are no longer minimizing anything similar to $\text{SSE}(\theta)$. 
 
 \begin{figure}[!htb]
 \begin{center}
-\includegraphics[width=4in]{figures/line.png}
+\includegraphics[width=3in]{figures/line.png}
 \caption{Our predictor at the optimal value of $\theta$, calculated at $\lambda=1$, $M=1$, on the \texttt{regress} training data set.}\label{fig:line}
 \end{center}
 \end{figure}
 
 \begin{figure}[!htb]
 \begin{center}
-\includegraphics[width=4in]{figures/lambdaline.png}
+\includegraphics[width=3in]{figures/lambdaline.png}
 \caption{Effect of $\lambda$, where the x-axis is $\log \lambda$ while the y-axis is $\log E_{test}$}\label{fig:lambdaline}
 \end{center}
 \end{figure}
