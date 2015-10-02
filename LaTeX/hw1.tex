@@ -185,7 +185,7 @@ However, in our case, we'll leave the regularization term alone and instead inve
 
 $$\theta_{\text{LAD}} = \text{argmin}_\theta\sum_{i=0}^n|y^{(i)} - \theta^\intercal\phi(x^{(i)})| + \lambda\lVert\theta\rVert^2$$
 
-Note that we are no longer minimizing anything similar to $\text{SSE}(\theta)$. As this problem has no simple analytical solution, we can again make use of gradient descent, this time to solve for our parameter $\theta$. After attempting various values for $\lambda$ and $M$, we arrive at $\lambda = 1$, $M=1$ as our optimal solution for the \texttt{regress} data set:
+Note that we are no longer minimizing anything similar to $\text{SSE}(\theta)$. As this problem has no simple analytical solution, we can again make use of gradient descent, this time to solve for our parameter $\theta$. After attempting various values for $\lambda$ and $M$, we arrive at $\lambda = 1$, $M=1$ as our optimal solution for the \texttt{regress} data set, as seen in Figure \ref{fig:line}.
 
 \begin{figure}[!htb]
 \begin{center}
@@ -201,7 +201,7 @@ Note that we are no longer minimizing anything similar to $\text{SSE}(\theta)$. 
 \end{center}
 \end{figure}
 
-Furthermore, we can see the effect of $\lambda$ by examining figure \ref{fig:lambdaline}. From this, we observe that $\lambda=0$ leads to the lowest testing error.
+Furthermore, we can see the effect of $\lambda$ by examining Figure \ref{fig:lambdaline}. This is how we observe that $\lambda=0$ leads to the lowest testing error.
 
 The results are expected; in general, we find that least absolute deviations is more robust than least squares regression, as it is less susceptible to outliers in the dataset. This is an especially important point - if we don't wish for our model to give heavier weight to outliers, then LAD is the better choice.
 
